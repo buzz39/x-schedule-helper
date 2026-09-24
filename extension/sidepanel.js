@@ -31,7 +31,7 @@ const ui = {
   banner: null,
   deleteArmed: false,
   saveState: "",
-  editorKey: "",
+  editorKey: null,
 };
 
 let saveTimer = 0;
@@ -558,7 +558,7 @@ function selectDraft(id, options = {}) {
   if (id === ui.selectedId && id !== null && !options.force) return;
   ui.selectedId = id;
   ui.deleteArmed = false;
-  ui.editorKey = "";
+  ui.editorKey = null;
   render();
   if (options.focus === "title") document.getElementById("field-title")?.focus();
 }
@@ -567,7 +567,7 @@ function addPart(id) {
   const draft = findDraft(id);
   const nextIndex = draft.parts.length;
   ui.drafts = updateDraft(ui.drafts, id, { parts: [...draft.parts, ""] });
-  ui.editorKey = "";
+  ui.editorKey = null;
   render();
   enqueueSave();
   document.getElementById(`field-part-${nextIndex}`)?.focus();
@@ -577,7 +577,7 @@ function removePart(id, index) {
   const draft = findDraft(id);
   const parts = draft.parts.filter((_, partIndex) => partIndex !== index);
   ui.drafts = updateDraft(ui.drafts, id, { parts });
-  ui.editorKey = "";
+  ui.editorKey = null;
   render();
   enqueueSave();
 }
@@ -589,7 +589,7 @@ function movePart(id, index, delta) {
   const parts = [...draft.parts];
   [parts[index], parts[target]] = [parts[target], parts[index]];
   ui.drafts = updateDraft(ui.drafts, id, { parts });
-  ui.editorKey = "";
+  ui.editorKey = null;
   render();
   enqueueSave();
 }
@@ -604,14 +604,14 @@ function moveDraftBy(id, direction) {
 function armOrDelete(id) {
   if (!ui.deleteArmed) {
     ui.deleteArmed = true;
-    ui.editorKey = "";
+    ui.editorKey = null;
     render();
     return;
   }
   ui.drafts = deleteDraft(ui.drafts, id);
   ui.selectedId = null;
   ui.deleteArmed = false;
-  ui.editorKey = "";
+  ui.editorKey = null;
   render();
   enqueueSave();
   showBanner({ tone: "info", text: "Draft deleted from this browser." });
@@ -760,6 +760,7 @@ function render() {
   renderList();
   const draft = findDraft(ui.selectedId);
   const key = editorKey(draft);
+  // A null key means the editor must rebuild. "" is the real key for "no draft".
   if (key !== ui.editorKey) {
     ui.editorKey = key;
     paintEditor(draft);
@@ -820,7 +821,7 @@ function applyImport(drafts, mode) {
   } else {
     ui.drafts = mergeDrafts(ui.drafts, drafts).drafts;
   }
-  ui.editorKey = "";
+  ui.editorKey = null;
   render();
   enqueueSave();
   showBanner({
