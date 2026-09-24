@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Draft Queue for X</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="top">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div>
+            <p class="kicker">Local only</p>
+            <h1>Draft Queue</h1>
+          </div>
+        </div>
+        <p class="lede">Hand a post to X’s composer. You press Schedule or Post.</p>
+        <div class="top-actions">
+          <button id="new-draft" class="btn btn-primary" type="button" data-testid="new-draft">New draft</button>
+          <button id="export-queue" class="btn" type="button" data-testid="export-queue">Export</button>
+          <button id="import-queue" class="btn" type="button" data-testid="import-queue">Import</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden />
+        </div>
+        <p id="save-state" class="save-state" aria-live="polite"></p>
+      </header>
+
+      <div id="banner" class="banner" hidden></div>
+
+      <div class="workspace">
+        <section class="list-pane" aria-label="Queue">
+          <div class="list-tools">
+            <label class="search">
+              <span class="sr">Search drafts</span>
+              <input id="search" type="search" placeholder="Search drafts" data-testid="search" />
+            </label>
+            <div id="filters" class="filters"></div>
+          </div>
+          <p id="empty" class="empty" hidden></p>
+          <ul id="draft-list" class="draft-list" data-testid="draft-list"></ul>
+        </section>
+        <section id="editor" class="editor" aria-label="Draft editor"></section>
+      </div>
+
+      <footer class="foot">
+        <p>Stored in this browser with chrome.storage.local. No account, no analytics, no X API.</p>
+      </footer>
+    </div>
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>
